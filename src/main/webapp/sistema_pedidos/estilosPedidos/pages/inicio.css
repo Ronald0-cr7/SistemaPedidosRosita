@@ -1,0 +1,30 @@
+.hero-slide { height: min(690px, 76vh); min-height: 520px; }
+.hero-slide img { height: 100%; object-fit: cover; object-position: center; }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8, 24, 13, .78) 0%, rgba(8, 24, 13, .42) 48%, rgba(8, 24, 13, .08) 100%); }
+.carousel-caption { top: 50%; right: 0; bottom: auto; left: 0; transform: translateY(-54%); }
+.carousel-caption h1, .carousel-caption h2 { max-width: 720px; color: #fff; font-size: clamp(2.4rem, 6vw, 5.1rem); line-height: 1.02; }
+.hero-kicker { color: var(--rosita-yellow); font-size: .9rem; font-weight: 800; text-transform: uppercase; }
+.hero-copy { max-width: 570px; color: #eef3ef; font-size: 1.1rem; }
+.hero-search-wrap { position: relative; z-index: 5; margin-top: -34px; }
+.hero-search { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .8rem; max-width: 900px; min-height: 68px; margin: auto; padding: .5rem .5rem .5rem 1.4rem; border: 1px solid var(--rosita-border); border-radius: 8px; background: #fff; box-shadow: 0 12px 35px rgba(22, 52, 29, .14); }
+.hero-search i { color: var(--rosita-green); font-size: 1.2rem; }
+.hero-search input { min-width: 0; border: 0; outline: 0; }
+.hero-search .btn { min-height: 50px; padding-inline: 1.8rem; }
+.category-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
+.category-item { display: flex; min-width: 0; flex-direction: column; align-items: center; padding: 1.5rem .7rem; border: 1px solid var(--rosita-border); border-radius: 8px; color: var(--rosita-ink); text-align: center; transition: border-color .2s, transform .2s; }
+.category-item:hover { border-color: var(--rosita-green); color: var(--rosita-green-dark); transform: translateY(-3px); }
+.category-item span { display: grid; place-items: center; width: 64px; height: 64px; margin-bottom: .8rem; border-radius: 50%; background: #edf6ea; color: var(--rosita-green); font-size: 1.7rem; }
+.category-ice span { background: #e8f5fb; color: #2784a8; }
+.category-snack span { background: #fff2cf; color: #a66b00; }
+.category-soda span { background: #ffe8e8; color: #c54040; }
+.category-grocery span { background: #edf6ea; color: var(--rosita-green); }
+.category-beer span { background: #fff0cf; color: #8c5b00; }
+.category-drink span { background: #e8f0ff; color: #376db5; }
+.category-item strong { min-height: 3rem; }
+.category-item small { color: var(--rosita-muted); }
+.benefit { display: flex; gap: 1rem; height: 100%; padding: 1.4rem; border-left: 3px solid var(--rosita-pink); }
+.benefit > i { color: var(--rosita-green); font-size: 2rem; }
+.benefit h3 { font-size: 1.05rem; }
+.benefit p { margin: 0; }
+@media (max-width: 991.98px) { .category-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 575.98px) { .hero-slide { min-height: 500px; } .hero-search { grid-template-columns: auto 1fr; } .hero-search .btn { grid-column: 1 / -1; } .category-grid { grid-template-columns: repeat(2, 1fr); } .carousel-control-prev, .carousel-control-next { display: none; } }

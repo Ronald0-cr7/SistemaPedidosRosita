@@ -1,0 +1,247 @@
+/* =====================================
+   ROSITA - OCEAN NIGHT
+===================================== */
+
+[data-bs-theme="dark"] {
+    --rosita-ink: #ecf4ff;
+    --rosita-muted: #a4b6cc;
+    --rosita-soft: #152338;
+    --rosita-border: #30445d;
+    --rosita-green: #38d9c8;
+    --rosita-green-dark: #0d9488;
+
+    --bs-body-bg: #0d1726;
+    --bs-body-color: #ecf4ff;
+    --bs-border-color: #30445d;
+
+    color-scheme: dark;
+}
+
+/* Fondo principal */
+
+[data-bs-theme="dark"] body,
+[data-bs-theme="dark"] .checkout-page,
+[data-bs-theme="dark"] .bg-soft {
+    background: linear-gradient(
+        135deg, #0d1726, #14263d, #101b2e
+    ) !important;
+
+    color: #ecf4ff;
+}
+
+/* Navegación */
+
+[data-bs-theme="dark"] .navbar,
+[data-bs-theme="dark"] .navbar.bg-white {
+    background: #111e30 !important;
+    border-bottom: 1px solid #30445d;
+    box-shadow: 0 5px 25px #0004;
+}
+
+[data-bs-theme="dark"] .navbar .nav-link,
+[data-bs-theme="dark"] .navbar .brand {
+    color: #dce8f7;
+}
+
+[data-bs-theme="dark"] .navbar .nav-link:hover,
+[data-bs-theme="dark"] .navbar .nav-link.active,
+[data-bs-theme="dark"] .navbar .brand small {
+    color: #38d9c8;
+}
+
+/* Tarjetas */
+
+[data-bs-theme="dark"] .card,
+[data-bs-theme="dark"] .product-card,
+[data-bs-theme="dark"] .hero-search,
+[data-bs-theme="dark"] .catalog-toolbar,
+[data-bs-theme="dark"] .checkout-panel,
+[data-bs-theme="dark"] .order-summary,
+[data-bs-theme="dark"] .panel-formulario {
+    background: #1c2c41 !important;
+    color: #ecf4ff;
+    border: 1px solid #30445d;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px #0003;
+    transition: all .25s ease;
+}
+
+[data-bs-theme="dark"] .card:hover,
+[data-bs-theme="dark"] .product-card:hover {
+    transform: translateY(-5px);
+    border-color: #38d9c8;
+    box-shadow: 0 10px 30px #38d9c81a;
+}
+
+/* Botones */
+
+[data-bs-theme="dark"] .btn-primary,
+[data-bs-theme="dark"] .btn-success,
+[data-bs-theme="dark"] .btn-registro {
+    background: linear-gradient(135deg, #087e8b, #0d9488);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+}
+
+[data-bs-theme="dark"] .btn-primary:hover,
+[data-bs-theme="dark"] .btn-success:hover,
+[data-bs-theme="dark"] .btn-registro:hover {
+    background: #05606b;
+    box-shadow: 0 5px 20px #38d9c830;
+}
+
+/* Formularios */
+
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+    background: #101c2e;
+    color: #ecf4ff;
+    border: 1px solid #3b506b;
+    border-radius: 8px;
+}
+
+[data-bs-theme="dark"] .form-control:focus,
+[data-bs-theme="dark"] .form-select:focus {
+    border-color: #38d9c8;
+    box-shadow: 0 0 0 3px #38d9c820;
+}
+
+[data-bs-theme="dark"] .form-control::placeholder {
+    color: #94a9c2;
+}
+
+/* Tablas */
+
+[data-bs-theme="dark"] .table {
+    --bs-table-bg: #1c2c41;
+    --bs-table-color: #ecf4ff;
+    --bs-table-border-color: #30445d;
+    --bs-table-hover-bg: #263c56;
+}
+
+[data-bs-theme="dark"] .table thead th {
+    background: #263c56 !important;
+    color: #60e7d8;
+}
+
+/* Textos secundarios */
+
+[data-bs-theme="dark"] .text-muted,
+[data-bs-theme="dark"] .text-secondary,
+[data-bs-theme="dark"] .descripcion {
+    color: #a4b6cc !important;
+}
+
+/* Carrito */
+
+[data-bs-theme="dark"] .summary-note,
+[data-bs-theme="dark"] .delivery-options input:checked + span {
+    background: #203b48;
+    color: #ecf4ff;
+}
+
+/* Imágenes */
+
+[data-bs-theme="dark"] .card-img-top {
+    background: #f1f5f9;
+}
+
+/* Botón sol */
+
+[data-bs-theme="dark"] #btnTema {
+    background: #1c2c41;
+    color: #facc15;
+    border: 1px solid #47617d;
+    box-shadow: 0 5px 20px #0005;
+}
+
+/* Footer */
+
+[data-bs-theme="dark"] .site-footer {
+    background: #090f1c;
+    color: #a4b6cc;
+}
+#btnTema {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    bottom: auto;
+    left: auto;
+    z-index: 2000;
+
+    display: grid;
+    place-items: center;
+
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 19px;
+
+    cursor: pointer;
+    box-shadow: 0 4px 15px #0003;
+    transition: all .3s ease;
+}
+
+#btnTema:hover {
+    transform: rotate(20deg) scale(1.1);
+}
+/* Navidad minimalista */
+
+.topbar {
+    background: linear-gradient(90deg, #123b50, #0d9488);
+    color: white;
+}
+
+.navbar {
+    border-bottom: 2px solid #e8be6a;
+}
+
+/* Luces navideñas sutiles */
+
+.site-header::after {
+    content: "";
+    display: block;
+    height: 5px;
+    background: repeating-linear-gradient(
+        90deg,
+        #e74c3c 0 8px,
+        transparent 8px 30px,
+        #facc15 30px 38px,
+        transparent 38px 60px,
+        #34d399 60px 68px,
+        transparent 68px 90px
+    );
+}
+
+/* Decoración del logo */
+
+.brand-mark {
+    position: relative;
+}
+
+.brand-mark::after {
+    content: "🎅";
+    position: absolute;
+    top: -15px;
+    right: -8px;
+    font-size: 22px;
+    transform: rotate(15deg);
+}
+
+/* Corregir buscador */
+
+.hero-search input {
+    background: transparent !important;
+    color: var(--rosita-ink) !important;
+}
+
+/* Asegurar contraste del menú */
+
+[data-bs-theme="dark"] .navbar .nav-link {
+    color: #e2e8f0 !important;
+}
+
+[data-bs-theme="dark"] .navbar .nav-link:hover {
+    color: #38d9c8 !important;
+}

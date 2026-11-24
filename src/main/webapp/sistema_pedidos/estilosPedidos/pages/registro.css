@@ -1,0 +1,6 @@
+@import url("login.css");
+.register-box { width: min(100%, 620px); }
+.register-layout .auth-content { padding-block: 2rem; }
+.register-layout .back-link { margin-bottom: 1.5rem; }
+.register-layout .auth-heading { margin-bottom: 1.25rem; }
+@media (max-width: 899.98px) { .register-layout .auth-visual { min-height: 280px; } }

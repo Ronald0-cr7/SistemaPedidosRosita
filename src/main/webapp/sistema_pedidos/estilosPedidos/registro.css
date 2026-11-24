@@ -1,0 +1,168 @@
+body {
+    margin: 0;
+    background: #fff;
+    font-family: Arial, sans-serif;
+    color: #14251b;
+}
+
+.registro-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+}
+
+.panel-imagen {
+    background:
+        linear-gradient(
+            rgba(10, 30, 15, .25),
+            rgba(10, 40, 20, .90)
+        ),
+        url('../../images/hero-minimarket-rosita.png')
+        center / cover no-repeat;
+
+    display: flex;
+    align-items: flex-end;
+    padding: 9%;
+    color: white;
+}
+
+.contenido-imagen h1 {
+    font-size: clamp(36px, 4vw, 60px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 25px 0 12px;
+}
+
+.contenido-imagen p {
+    font-size: 15px;
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.marca i {
+    background: #e94d75;
+    border-radius: 50%;
+    padding: 12px;
+    font-size: 20px;
+}
+
+.panel-formulario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 25px;
+}
+
+.formulario {
+    width: 100%;
+    max-width: 500px;
+}
+
+.volver {
+    text-decoration: none;
+    color: #347f42;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.nuevo-cliente {
+    margin: 25px 0 5px;
+    color: #e94d75;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.formulario h2 {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.descripcion {
+    color: #69786e;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-control {
+    min-height: 42px;
+    border: 1px solid #d4dfd5;
+    border-radius: 5px;
+}
+
+.form-control:focus {
+    border-color: #378343;
+    box-shadow: 0 0 0 3px #37834320;
+}
+
+.password-box {
+    position: relative;
+}
+
+.password-box input {
+    padding-right: 45px;
+}
+
+.password-box button {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #69786e;
+}
+
+.btn-registro {
+    background: #378343;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.btn-registro:hover {
+    background: #286b33;
+    color: white;
+}
+
+.form-check-label {
+    font-size: 13px;
+    color: #69786e;
+}
+
+.iniciar-sesion {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 14px;
+}
+
+.iniciar-sesion a {
+    color: #378343;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+
+    .registro-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .panel-imagen {
+        display: none;
+    }
+
+    .panel-formulario {
+        min-height: 100vh;
+    }
+}
