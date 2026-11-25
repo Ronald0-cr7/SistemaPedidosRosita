@@ -3,6 +3,7 @@ package Controlador;
 
 import Modelo.Carrito;
 import Modelo.CarritoDAO;
+import Modelo.ReservaDAO;
 import Modelo.Tienda;
 import Modelo.TiendaDAO;
 
@@ -57,6 +58,9 @@ public class SVCarrito extends HttpServlet {
 
         // Obtenemos la sesión del cliente
         HttpSession session = request.getSession();
+        synchronized (session) {
+        ReservaDAO reservas = new ReservaDAO();
+        UUID reservaId = ReservaDAO.id(session);
         
         Cliente cliente = (Cliente)
         session.getAttribute("clienteLogueado");
@@ -75,10 +79,12 @@ public class SVCarrito extends HttpServlet {
         }
 
         try {
+            carrito = reservas.cargar(reservaId);
+            session.setAttribute("carrito", carrito);
 
             // MOSTRAR CARRITO
             if (ruta.equals("/Carrito")
-                    || ruta.equals("/SVCarrito")) {
+                    || ruta.equals("/SVCarrito") || ruta.equals("/MisPedidos")) {
 
                 if (!request.getMethod().equals("GET")) {
                     response.sendError(405);
@@ -103,6 +109,7 @@ public class SVCarrito extends HttpServlet {
                 // Enviamos datos al JSP
                 request.setAttribute("productosCarrito", lista);
                 request.setAttribute("subtotal", subtotal);
+                request.setAttribute("reservaVence", reservas.vence(reservaId));
                 request.setAttribute(
                         "cantidadProductos",
                         cantidadProductos
@@ -249,9 +256,7 @@ public class SVCarrito extends HttpServlet {
 
                 // Verificamos stock en Supabase
                 if (nuevaCantidad > Integer.MAX_VALUE
-                        || !daoCarrito.verificarStock(
-                                productoId,
-                                (int) nuevaCantidad)) {
+                        || !reservas.reservar(reservaId, productoId, (int) nuevaCantidad)) {
 
                     response.sendError(
                             400,
@@ -342,7 +347,7 @@ else if (ruta.equals("/RegistrarPedidoCarrito")) {
         }
 
         // Guardar pedido en PostgreSQL
-        new PedidoDAO().agregar(pedido, detalles);
+        new PedidoDAO().agregarReservado(pedido, detalles, reservaId);
 
         pedidoId = pedido.getId();
 
@@ -384,13 +389,13 @@ else if (ruta.equals("/RegistrarPedidoCarrito")) {
                 if (cantidad <= 0) {
 
                     // Si la cantidad es cero, eliminamos
+                    reservas.reservar(reservaId, productoId, 0);
                     carrito.remove(productoId);
 
                 } else {
 
                     // Validamos stock disponible
-                    if (!daoCarrito.verificarStock(
-                            productoId, cantidad)) {
+                    if (!reservas.reservar(reservaId, productoId, cantidad)) {
 
                         response.sendError(
                                 400,
@@ -420,6 +425,7 @@ else if (ruta.equals("/RegistrarPedidoCarrito")) {
                         request.getParameter("productoId")
                 );
 
+                reservas.reservar(reservaId, productoId, 0);
                 carrito.remove(productoId);
 
                 response.sendRedirect(
@@ -436,6 +442,7 @@ else if (ruta.equals("/RegistrarPedidoCarrito")) {
                     return;
                 }
 
+                reservas.liberar(reservaId);
                 carrito.clear();
 
                 response.sendRedirect(
@@ -471,6 +478,7 @@ else if (ruta.equals("/RegistrarPedidoCarrito")) {
                     e
             );
         }
+    }
     }
     private void abrirWhatsAppPedido(
         HttpServletRequest request,
