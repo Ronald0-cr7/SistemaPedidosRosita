@@ -83,7 +83,7 @@
 
     <span class="position-absolute top-0 start-100
                  translate-middle badge rounded-pill bg-danger">
-        <%= cantidadCarrito %>
+        <span data-reserva-count><%= cantidadCarrito %></span>
     </span>
 
 </a>
@@ -158,29 +158,21 @@
             ? 0
             : carritoSesion.getOrDefault(p.getId(), 0);
 
-    int stockDisponible = Math.max(0, p.getStock() - cantidadEnCarrito);
+    int stockDisponible = p.getStock();
 %>
 
-<p>Puedes agregar: <%= stockDisponible %></p>
+<p>Stock disponible: <span data-stock="<%=p.getId()%>"><%= stockDisponible %></span></p>
 
-<% if (stockDisponible > 0) { %>
 <form action="<%= ctx %>/AgregarCarrito" method="post">
     <input type="hidden" name="productoId" value="<%= p.getId() %>">
     <input type="hidden" name="cantidad" value="1">
 
-    <button type="submit" class="btn btn-primary w-100">
+    <button type="submit" class="btn btn-primary w-100" data-stock-button="<%=p.getId()%>" <%=stockDisponible<=0 ? "disabled" : ""%>>
         <i class="bi bi-cart-plus me-2"></i>
         Agregar al carrito
     </button>
 </form>
 
-<% } else { %>
-
- <button type="button" class="btn btn-secondary w-100" disabled>
-    <%= p.getStock() > 0 ? "Límite alcanzado" : "Sin stock" %>
-</button>
-
-<% } %>
                                     </div>
                                 </div>
                             </div>
@@ -350,5 +342,6 @@ document.addEventListener("DOMContentLoaded", function () {
     filtrar();
 });
 </script>
+<script src="<%=ctx%>/sistema_pedidos/js/stock-reservas.js" data-context="<%=ctx%>"></script>
 </body>
 </html>
