@@ -280,10 +280,7 @@ public class SVCliente extends HttpServlet {
             }
 
             // Eliminar información de sesión del cliente
-            session.removeAttribute("clienteLogueado");
-            session.removeAttribute("csrfLogin");
-            session.removeAttribute("csrfRegistro");
-
+          session.invalidate();
             request.changeSessionId();
 
             response.sendRedirect(
