@@ -362,9 +362,8 @@
                             S/ <%= p.getPrecio() %>
                         </h5>
 
-                        <p>Stock: <%= p.getStock() %></p>
+                        <p>Stock: <span data-stock="<%=p.getId()%>"><%= p.getStock() %></span></p>
                         
-                                                  <% if (p.getStock() > 0) { %>
 
     <form action="<%= ctx %>/AgregarCarrito" method="POST">
 
@@ -376,20 +375,13 @@
                name="cantidad"
                value="1">
 
-        <button type="submit" class="btn btn-primary w-100">
+        <button type="submit" class="btn btn-primary w-100" data-stock-button="<%=p.getId()%>" <%=p.getStock()<=0 ? "disabled" : ""%>>
             <i class="bi bi-cart-plus me-2"></i>
             Agregar al carrito
         </button>
 
     </form>
 
-<% } else { %>
-
-    <button class="btn btn-secondary w-100" disabled>
-        Sin stock
-    </button>
-
-<% } %>
                     </div>
 
                 </div>
@@ -600,5 +592,6 @@
             el.textContent = new Date().getFullYear();
             });
         </script>
-    </body>
+<script src="<%=ctx%>/sistema_pedidos/js/stock-reservas.js" data-context="<%=ctx%>"></script>
+</body>
 </html>
