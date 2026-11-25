@@ -29,15 +29,15 @@ public class CarritoDAO {
                 p.nombre,
                 p.imagen,
                 p.precio,
-                p.stock,
+                v.stock_disponible AS stock,
                 c.nombre AS categoria
             FROM public.productos p
+            JOIN public.v_stock_disponible v ON v.producto_id=p.id
             INNER JOIN public.categorias c
                 ON p.categoria_id = c.id
             WHERE p.id = ?
               AND p.activo = TRUE
               AND p.eliminado = FALSE
-              AND p.stock > 0
               AND c.activo = TRUE
             """;
 
@@ -120,12 +120,7 @@ public class CarritoDAO {
                 );
             }
 
-            if (cantidad > item.getStockDisponible()) {
-                throw new IllegalArgumentException(
-                    "Stock insuficiente para: "
-                    + item.getNombre()
-                );
-            }
+            item.setStockDisponible(item.getStockDisponible() + cantidad);
 
             item.setCantidad(cantidad);
 
