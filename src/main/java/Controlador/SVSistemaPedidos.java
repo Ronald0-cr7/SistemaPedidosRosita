@@ -36,6 +36,11 @@ public class SVSistemaPedidos extends HttpServlet {
                 TiendaDAO daotienda = new TiendaDAO();
                 //Recuperar los datos de los productos
                 ProductoDAO daoproducto = new ProductoDAO();
+                var session = request.getSession();
+                synchronized (session) {
+                    session.setAttribute("carrito", new Modelo.ReservaDAO().cargar(Modelo.ReservaDAO.id(session)));
+                }
+                response.setHeader("Cache-Control", "no-store");
                 
                 
                 try {
@@ -136,7 +141,7 @@ else if (ruta.equals("/ProductosPorCategoria")) {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(SVSistemaPedidos.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServletException("Error consultando el catálogo", ex);
         }
     }
 
@@ -147,7 +152,7 @@ else if (ruta.equals("/ProductosPorCategoria")) {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(SVSistemaPedidos.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServletException("Error consultando el catálogo", ex);
         }
     }
 
