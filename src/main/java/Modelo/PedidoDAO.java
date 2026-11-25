@@ -352,6 +352,10 @@ public class PedidoDAO {
     // CREATE: Agregar pedido con sus productos
     public void agregar(Pedido p, List<PedidoDetalle> detalles)
             throws SQLException {
+        agregarReservado(p, detalles, null);
+    }
+    public void agregarReservado(Pedido p, List<PedidoDetalle> detalles, java.util.UUID reservaId)
+            throws SQLException {
 
         validar(p);
         Map<Long, Integer> cantidades = agrupar(detalles);
@@ -368,6 +372,7 @@ public class PedidoDAO {
             con.setAutoCommit(false);
 
             try {
+                if (reservaId != null) ReservaDAO.consumir(con, reservaId, cantidades);
                 BigDecimal delivery = obtenerDelivery(con, p);
                 String pedidoId;
 
