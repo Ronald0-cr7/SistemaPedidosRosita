@@ -280,8 +280,13 @@ public class SVCliente extends HttpServlet {
             }
 
             // Eliminar información de sesión del cliente
-          session.invalidate();
-            request.changeSessionId();
+            try {
+                Object id = session.getAttribute("reservaId");
+                if (id != null) new Modelo.ReservaDAO().liberar((java.util.UUID) id);
+            } catch (java.sql.SQLException e) {
+                throw new ServletException("No se pudo liberar el carrito", e);
+            }
+            session.invalidate();
 
             response.sendRedirect(
                 request.getContextPath() + "/IndexSistema"
