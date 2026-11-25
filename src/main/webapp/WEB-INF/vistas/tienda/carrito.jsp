@@ -144,6 +144,7 @@
             </div>
 
             <div id="checkoutContent" class="row g-4 <%=vacio ? "d-none" : ""%>">
+                <div class="col-12"><div class="alert alert-warning" id="reservaReloj" data-vence="<%=request.getAttribute("reservaVence")%>">Reserva temporal: 05:00</div></div>
                 <div class="col-lg-7">
                     <section class="checkout-panel">
                         <div class="panel-heading">
@@ -388,5 +389,6 @@
     });
     </script>
     <%-- No cargar el antiguo js/pages/carrito.js: gestiona un carrito distinto en localStorage. --%>
+<script src="<%=ctx%>/sistema_pedidos/js/stock-reservas.js" data-context="<%=ctx%>"></script>
 </body>
 </html>
