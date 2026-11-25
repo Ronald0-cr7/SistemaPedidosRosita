@@ -76,9 +76,17 @@
                     </ul>
                     <div class="d-flex gap-2 mt-3 mt-lg-0">
                         <a class="btn btn-outline-primary" href="<%= recursos %>/login.html">Ingresar</a>
-                        <a class="btn btn-primary" href="<%=ctx%>/Carrito">
-                            <i class="bi bi-cart3 me-1"></i> Carrito
-                        </a>
+                       <a class="btn btn-primary position-relative"
+   href="<%=ctx%>/Carrito">
+
+    <i class="bi bi-cart3 me-1"></i> Carrito
+
+    <span class="position-absolute top-0 start-100
+                 translate-middle badge rounded-pill bg-danger">
+        <%= cantidadCarrito %>
+    </span>
+
+</a>
                     </div>
                 </div>
             </div>
