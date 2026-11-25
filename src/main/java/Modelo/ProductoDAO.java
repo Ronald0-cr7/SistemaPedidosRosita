@@ -211,7 +211,7 @@ public List<Producto> listarCatalogo() throws SQLException {
             p.nombre,
             p.descripcion,
             p.precio,
-            p.stock,
+            v.stock_disponible AS stock,
             p.minimo,
             p.imagen,
             p.vencimiento,
@@ -219,11 +219,11 @@ public List<Producto> listarCatalogo() throws SQLException {
             p.eliminado,
             c.nombre AS nombre_categoria
         FROM public.productos p
+        JOIN public.v_stock_disponible v ON v.producto_id=p.id
         LEFT JOIN public.categorias c
             ON p.categoria_id = c.id
         WHERE p.activo = TRUE
           AND p.eliminado = FALSE
-          AND p.stock > 0
         ORDER BY p.nombre ASC
         """;
 
@@ -265,14 +265,14 @@ public List<Producto> listarCatalogo() throws SQLException {
         List<Producto> lista = new ArrayList<>();
 
         String sql = """
-            SELECT p.*, c.nombre AS nombre_categoria
+            SELECT p.*, v.stock_disponible AS disponible, c.nombre AS nombre_categoria
             FROM public.productos p
+            JOIN public.v_stock_disponible v ON v.producto_id=p.id
             INNER JOIN public.categorias c
                 ON p.categoria_id = c.id
             WHERE p.categoria_id = ?
               AND p.activo = TRUE
               AND p.eliminado = FALSE
-              AND p.stock > 0
               AND c.activo = TRUE
             ORDER BY p.nombre ASC
             """;
@@ -293,7 +293,7 @@ public List<Producto> listarCatalogo() throws SQLException {
                     p.setNombre(rs.getString("nombre"));
                     p.setDescripcion(rs.getString("descripcion"));
                     p.setPrecio(rs.getDouble("precio"));
-                    p.setStock(rs.getInt("stock"));
+                    p.setStock(rs.getInt("disponible"));
                     p.setMinimo(rs.getInt("minimo"));
                     p.setImagen(rs.getString("imagen"));
                     p.setVencimiento(rs.getString("vencimiento"));
