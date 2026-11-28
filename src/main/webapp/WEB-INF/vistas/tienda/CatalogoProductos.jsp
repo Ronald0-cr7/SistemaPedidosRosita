@@ -67,15 +67,16 @@
                         <li class="nav-item"><a class="nav-link" href="<%= ctx %>/IndexSistema">Inicio</a></li>
                         <li class="nav-item"><a class="nav-link active" href="<%= ctx %>/ListaProductos">Productos</a></li>
                         <li class="nav-item"><a class="nav-link" href="<%= ctx %>/IndexSistema#categorias">Categorías</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<%= ctx %>/Carrito">Mis pedidos</a></li>
+   
                      <li class="nav-item"><a class="nav-link" href="<%= ctx %>/HistorialPedidos">Historial de Pedidos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<%= ctx %>/LoginCliente">Iniciar Sesion</a></li>
-                      <li class="nav-item"><a class="nav-link" href="<%= ctx %>/RegistroCliente">Crear cuenta</a></li>
+
                           
                     
                     </ul>
                     <div class="d-flex gap-2 mt-3 mt-lg-0">
-                        <a class="btn btn-outline-primary" href="<%= recursos %>/login.html">Ingresar</a>
+
+
+                        <a class="btn btn-outline-primary" href="<%=ctx%>/LoginCliente">Ingresar</a>
                        <a class="btn btn-primary position-relative"
    href="<%=ctx%>/Carrito">
 
@@ -203,12 +204,12 @@
                 <div class="col-md-3">
                     <h3>Navegación</h3>
                     <a href="<%= ctx %>/IndexSistema">Inicio</a>
-                    <a href="<%= ctx %>/CatalogoProductos">Productos</a>
+                    <a href="<%= ctx %>/ListaProductos">Productos</a>
                 </div>
                 <div class="col-md-3">
                     <h3>Tu cuenta</h3>
-                    <a href="<%= recursos %>/login.html">Ingresar</a>
-                    <a href="<%= recursos %>/registro.html">Registrarte</a>
+                    <a href="<%= ctx %>/LoginCliente">Ingresar</a>
+                    <a href="<%= ctx %>/RegistroCliente">Registrarte</a>
                 </div>
             </div>
             <div class="footer-bottom">

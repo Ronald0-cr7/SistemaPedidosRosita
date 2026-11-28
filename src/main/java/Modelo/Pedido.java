@@ -23,7 +23,8 @@ public class Pedido {
    private double subtotal;
    private double totalEstimado;
     private String cuentaClienteId;
-
+private String estadoPago;
+private String pagoId;
   
     public Pedido() {
     }

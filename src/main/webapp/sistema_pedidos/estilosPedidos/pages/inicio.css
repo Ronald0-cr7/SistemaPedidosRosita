@@ -28,3 +28,100 @@
 .benefit p { margin: 0; }
 @media (max-width: 991.98px) { .category-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 575.98px) { .hero-slide { min-height: 500px; } .hero-search { grid-template-columns: auto 1fr; } .hero-search .btn { grid-column: 1 / -1; } .category-grid { grid-template-columns: repeat(2, 1fr); } .carousel-control-prev, .carousel-control-next { display: none; } }
+/* Carrusel comercial Rosita */
+.banner-img {
+    width: 100%;
+    aspect-ratio: 1920 / 600;
+    object-fit: cover;
+}
+
+.banner-btn {
+    position: absolute;
+    bottom: 17%;
+    left: 10%;
+    padding: 12px 30px;
+    font-weight: bold;
+    border-radius: 8px;
+    z-index: 2;
+}
+
+@media (max-width: 768px) {
+    .banner-btn {
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+}
+/* Carrusel comercial */
+#heroCarousel {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 10px 15px 0;
+}
+
+#heroCarousel .carousel-item {
+    position: relative;
+}
+
+#heroCarousel .banner-img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1920 / 600;
+    object-fit: cover;
+}
+
+/* Botón Ver más */
+#heroCarousel .banner-btn {
+    position: absolute;
+    bottom: 12%;
+    left: 10%;
+    z-index: 10;
+    background: #ffffff;
+    color: #17233a;
+    padding: 12px 35px;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 5px 20px #0004;
+    transition: all 0.3s ease;
+}
+
+#heroCarousel .banner-btn:hover {
+    background: #0d9488;
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* Flechas de navegación */
+#heroCarousel .carousel-control-prev,
+#heroCarousel .carousel-control-next {
+    width: 5%;
+    opacity: 1;
+    z-index: 5;
+}
+
+#heroCarousel .carousel-control-prev-icon,
+#heroCarousel .carousel-control-next-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: #0008;
+    background-size: 50%;
+    filter: none;
+}
+
+/* Adaptación a celulares */
+@media (max-width: 768px) {
+    #heroCarousel {
+        margin: 5px;
+        border-radius: 10px;
+    }
+
+    #heroCarousel .banner-btn {
+        left: 8%;
+        bottom: 8%;
+        padding: 6px 16px;
+        font-size: 12px;
+    }
+}

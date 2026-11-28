@@ -286,9 +286,24 @@
                                         <option value="YAPE">YAPE</option>
                                         <option value="PLIN">PLIN</option>
                                         <option value="TARJETA">TARJETA</option>
+                                        <option value="MERCADO_PAGO">
+        Mercado Pago - Pago en línea
+    </option>
                                         <option value="OTRO">OTRO</option>
                                     </select>
                                     <div class="invalid-feedback">Selecciona un método.</div>
+                                </div>
+                                <div class="col-md-6 d-none" id="bloqueCorreoPago">
+                                    <label class="form-label" for="correoPago">Correo electrónico para el pago</label>
+                                    <input type="email"
+                                           class="form-control"
+                                           id="correoPago"
+                                           name="correo_pago"
+                                           placeholder="cliente@correo.com"
+                                           maxlength="254"
+                                           autocomplete="email"
+                                           disabled>
+                                    <div class="invalid-feedback">Ingresa un correo electrónico válido.</div>
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label" for="orderNotes">Indicaciones del pedido</label>
@@ -306,10 +321,19 @@
                         <div class="summary-line"><span>Productos</span><strong id="subtotal">S/ <%=String.format(Locale.US, "%.2f", subtotal)%></strong></div>
                         <div class="summary-line"><span>Delivery</span><strong id="deliveryCost">S/ 0.00</strong></div>
                         <div class="summary-total"><span>Total estimado</span><strong id="orderTotal">S/ <%=String.format(Locale.US, "%.2f", subtotal)%></strong></div>
-                        <p class="summary-note"><i class="bi bi-info-circle"></i>El administrador confirmará disponibilidad y total final por WhatsApp.</p>
-<button id="placeOrder" class="btn btn-whatsapp btn-lg w-100"
-        type="submit" form="checkoutForm">
-    <i class="bi bi-whatsapp me-2"></i>Enviar pedido por WhatsApp
+                        <p id="paymentNote" class="summary-note">
+    <i class="bi bi-info-circle"></i>
+    El administrador confirmará tu pedido por WhatsApp.
+</p>
+<button id="placeOrder"
+        class="btn btn-whatsapp btn-lg w-100"
+        type="submit"
+        form="checkoutForm">
+
+    <i class="bi bi-whatsapp me-2"></i>
+
+    Enviar pedido por WhatsApp
+
 </button>
                         <p id="orderMessage" class="small mt-2" role="status"></p>
                         <a href="<%=ctx%>/MisPedidos" class="history-link"><i class="bi bi-clock-history"></i>Consultar historial de pedidos</a>
@@ -338,6 +362,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         const subtotal = <%=String.format(Locale.US, "%.2f", subtotal)%>;
         const form = document.getElementById('checkoutForm');
+        if (!form) return;
         const deliveryFields = document.getElementById('deliveryFields');
         const deliveryAddress = document.getElementById('deliveryAddress');
         const deliveryCost = document.getElementById('deliveryCost');
@@ -356,7 +381,60 @@
             radio.addEventListener('change', actualizarEntrega);
         });
         actualizarEntrega();
+// CAMBIAR BOTÓN SEGÚN MÉTODO DE PAGO
+const paymentMethod =
+    document.getElementById('paymentMethod');
 
+const placeOrder =
+    document.getElementById('placeOrder');
+
+const paymentNote =
+    document.getElementById('paymentNote');
+
+function actualizarMetodoPago() {
+
+    const correoPago = document.getElementById('correoPago');
+    const bloqueCorreoPago = document.getElementById('bloqueCorreoPago');
+    const esMercadoPago = paymentMethod.value === 'MERCADO_PAGO';
+
+    bloqueCorreoPago.classList.toggle('d-none', !esMercadoPago);
+    correoPago.required = esMercadoPago;
+    correoPago.disabled = !esMercadoPago;
+
+    if (paymentMethod.value === 'MERCADO_PAGO') {
+
+        placeOrder.classList.remove('btn-whatsapp');
+        placeOrder.classList.add('btn-primary');
+
+        placeOrder.innerHTML =
+            '<i class="bi bi-credit-card me-2"></i>' +
+            'Pagar con Mercado Pago';
+
+        paymentNote.innerHTML =
+            '<i class="bi bi-shield-check me-2"></i>' +
+            'Serás redirigido a Mercado Pago para completar tu pago.';
+
+    } else {
+
+        placeOrder.classList.remove('btn-primary');
+        placeOrder.classList.add('btn-whatsapp');
+
+        placeOrder.innerHTML =
+            '<i class="bi bi-whatsapp me-2"></i>' +
+            'Enviar pedido por WhatsApp';
+
+        paymentNote.innerHTML =
+            '<i class="bi bi-info-circle"></i> ' +
+            'El administrador confirmará tu pedido por WhatsApp.';
+    }
+}
+
+paymentMethod.addEventListener(
+    'change',
+    actualizarMetodoPago
+);
+
+actualizarMetodoPago();
         document.getElementById('getLocation').addEventListener('click', function () {
             const status = document.getElementById('locationStatus');
             if (!navigator.geolocation) {

@@ -71,9 +71,12 @@
 <!-- ESTILOS ESPECIFICOS DE INICIO -->
 <link href="<%=recursos%>/estilosPedidos/pages/inicio.css"
       rel="stylesheet">
-
+<!-- ESTILOS para el Carrusel bien piola -->
+<link href="<%=recursos%>/estilosPedidos/pages/Carrusel.css"
+      rel="stylesheet">
 <link rel="stylesheet"
       href="${pageContext.request.contextPath}/sistema_pedidos/estilosPedidos/tema.css">
+
 
 <script src="${pageContext.request.contextPath}/sistema_pedidos/js/tema.js"></script>
 
@@ -138,11 +141,7 @@
                                     Carrito de compras
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="<%=ctx%>/SVCarrito">
-                                    Mis pedidos
-                                </a>
-                            </li>
+                          
                               <li class="nav-item">
                                 <a class="nav-link" href="<%=ctx%>/HistorialPedidos">
                                     Historial pedidos
@@ -164,10 +163,7 @@
             Ingresar
         </a>
 
-        <a class="btn btn-primary"
-           href="<%=ctx%>/RegistroCliente">
-            Crear cuenta
-        </a>
+        
 
     <% } else { %>
 
@@ -195,32 +191,57 @@
             </nav>
         </header>
         <main>
-            <section class="hero position-relative">
-                <div id="heroCarousel" class="carousel slide">
-                    <div class="carousel-inner">
-                        <article class="carousel-item active hero-slide">
-                            <img src="<%=recursos%>/images/hero-minimarket-rosita.png" class="d-block w-100" alt="Interior surtido del Minimarket Rosita con bebidas, snacks, helados y abarrotes">
-                            <div class="hero-overlay">
-                            </div>
-                            <div class="carousel-caption container text-start">
-                                <p class="hero-kicker">
-                                    Tu minimarket de confianza
-                                </p>
-                                <h1>
-                                    Un poco de todo, cerquita de ti
-                                </h1>
-                                <p class="hero-copy">
-                                    Helados, snacks, gaseosas, bebidas, abarrotes, cervezas y mucho más para cada momento.
-                                </p>
-                                <a href="<%=ctx%>/ListaProductos" class="btn btn-primary btn-lg">
-                                    Ver productos
-                                    <i class="bi bi-arrow-right ms-1">
-                                    </i>
-                                </a>
-                            </div>
-                        </article>
-                    </div>
-                </div>
+<%
+    String[] banners = {
+        "hero-minimarket-rosita.png",
+        "banner de abarrotes.png",
+        "banner de lacteos.png",
+        "banner de bebidas.png",
+        "banner de limpieza.png",
+        "banner de snaks.png",
+        "banner de gaseosas.png",
+        "banner de helados.png",
+        "banner de licores.png",
+        "banner de frutas.png"
+    };
+%>
+
+<div id="heroCarousel" class="carousel slide"
+     data-bs-ride="carousel" data-bs-interval="5000">
+
+    <div class="carousel-inner">
+
+        <% for (int i = 0; i < banners.length; i++) { %>
+
+        <div class="carousel-item <%= i == 0 ? "active" : "" %>">
+
+            <img src="<%=recursos%>/images/<%=banners[i]%>"
+                 class="d-block w-100 banner-img">
+
+            <a class="banner-btn"
+               href="<%=ctx%><%= i == 0
+                   ? "/ListaProductos"
+                   : "/ProductosPorCategoria?categoria=" + i %>">
+                Ver más
+            </a>
+
+        </div>
+
+        <% } %>
+
+    </div>
+
+    <button class="carousel-control-prev" type="button"
+            data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button class="carousel-control-next" type="button"
+            data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+
+</div>
                 <div class="container hero-search-wrap">
                     <form id="heroSearch" class="hero-search" action="<%=ctx%>/ListaProductos" method="get">
                         <i class="bi bi-search">
@@ -526,7 +547,7 @@
                         <a href="<%=ctx%>/IndexSistema">
                             Inicio
                         </a>
-                        <a href="<%=recursos%>/ListaProductos">
+                        <a href="<%=ctx%>/ListaProductos">
                             Productos
                         </a>
                         <a href="#categorias">
@@ -537,14 +558,14 @@
                         <h3>
                             Tu cuenta
                         </h3>
-                        <a href="<%=recursos%>/LoginCliente">
+                        <a href="<%=ctx%>/LoginCliente">
                             Ingresar
                         </a>
-                        <a href="<%=recursos%>/RegistroCliente">
+                        <a href="<%=ctx%>/RegistroCliente">
                             Registrarte
                         </a>
-                        <a href="<%=recursos%>/historial.html">
-                            Mis pedidos
+                        <a href="<%=ctx%>/Carrito">
+                            Carrito de compras
                         </a>
                     </div>
                     <div class="col-lg-3">

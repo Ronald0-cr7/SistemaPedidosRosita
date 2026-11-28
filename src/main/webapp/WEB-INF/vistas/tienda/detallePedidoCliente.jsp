@@ -30,10 +30,30 @@
         response.sendRedirect(ctx + "/HistorialPedidos");
         return;
     }
+
+    boolean mercadoPago =
+            "MERCADO_PAGO".equals(pedido.getMetodoPago());
+
+    String estadoPago = pedido.getEstadoPago();
+
+    String colorPago = "secondary";
+
+    if ("Aprobado".equals(estadoPago)) {
+        colorPago = "success";
+    } else if ("Pendiente".equals(estadoPago)) {
+        colorPago = "warning";
+    } else if ("Rechazado".equals(estadoPago)
+            || "Cancelado".equals(estadoPago)
+            || "Vencido".equals(estadoPago)) {
+        colorPago = "danger";
+    } else if ("Reembolsado".equals(estadoPago)) {
+        colorPago = "info";
+    }
 %>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
     <meta charset="UTF-8">
@@ -55,6 +75,7 @@
     <script src="<%=ctx%>/sistema_pedidos/js/tema.js"></script>
 
     <style>
+
         body {
             min-height: 100vh;
         }
@@ -82,6 +103,18 @@
             font-weight: 700;
             color: var(--rosita-green, #087e8b);
         }
+
+        .estado-pago {
+            border: 1px solid rgba(128, 128, 128, .25);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .badge {
+            padding: 8px 13px;
+            border-radius: 20px;
+        }
+
     </style>
 
 </head>
@@ -126,41 +159,96 @@
             <div class="row g-3">
 
                 <div class="col-md-6">
-                    <small class="text-muted">Número de pedido</small>
 
-                    <p class="fw-bold">
+                    <small class="text-muted">
+                        Número de pedido
+                    </small>
+
+                    <p class="fw-bold text-break">
                         <%=esc(pedido.getNumero())%>
                     </p>
+
                 </div>
 
                 <div class="col-md-6">
+
                     <small class="text-muted">Fecha</small>
 
                     <p class="fw-bold">
                         <%=esc(pedido.getCreadoEn())%>
                     </p>
+
                 </div>
 
                 <div class="col-md-4">
+
                     <small class="text-muted">Tipo de entrega</small>
 
                     <p><%=esc(pedido.getTipoEntrega())%></p>
+
                 </div>
 
                 <div class="col-md-4">
+
                     <small class="text-muted">Método de pago</small>
 
-                    <p><%=esc(pedido.getMetodoPago())%></p>
+                    <% if (mercadoPago) { %>
+
+                        <p>
+                            <i class="bi bi-credit-card me-1"></i>
+                            Mercado Pago
+                        </p>
+
+                    <% } else { %>
+
+                        <p><%=esc(pedido.getMetodoPago())%></p>
+
+                    <% } %>
+
                 </div>
 
                 <div class="col-md-4">
-                    <small class="text-muted">Estado</small>
+
+                    <small class="text-muted">
+                        Estado del pedido
+                    </small>
 
                     <p>
-                        <span class="badge text-bg-primary">
-                            <%=esc(pedido.getEstado())%>
-                        </span>
+
+                        <% if ("Pendiente".equals(pedido.getEstado())) { %>
+
+                            <span class="badge text-bg-warning">
+                                Pendiente
+                            </span>
+
+                        <% } else if ("Confirmado".equals(pedido.getEstado())) { %>
+
+                            <span class="badge text-bg-primary">
+                                Confirmado
+                            </span>
+
+                        <% } else if ("Atendido".equals(pedido.getEstado())) { %>
+
+                            <span class="badge text-bg-success">
+                                Atendido
+                            </span>
+
+                        <% } else if ("Cancelado".equals(pedido.getEstado())) { %>
+
+                            <span class="badge text-bg-danger">
+                                Cancelado
+                            </span>
+
+                        <% } else { %>
+
+                            <span class="badge text-bg-secondary">
+                                <%=esc(pedido.getEstado())%>
+                            </span>
+
+                        <% } %>
+
                     </p>
+
                 </div>
 
                 <% if ("DELIVERY".equals(pedido.getTipoEntrega())) { %>
@@ -180,6 +268,116 @@
                 <% } %>
 
             </div>
+
+        </div>
+
+    </div>
+
+    <!-- INFORMACIÓN DEL PAGO -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body p-4">
+
+            <h5 class="fw-bold mb-4">
+
+                <i class="bi bi-wallet2 me-2"></i>
+                Información del pago
+
+            </h5>
+
+            <% if (mercadoPago) { %>
+
+                <div class="estado-pago">
+
+                    <div class="row align-items-center g-3">
+
+                        <div class="col-md-8">
+
+                            <h6 class="fw-bold">
+                                Mercado Pago
+                            </h6>
+
+                            <span class="badge text-bg-<%=colorPago%>">
+
+                                <% if ("Aprobado".equals(estadoPago)) { %>
+
+                                    <i class="bi bi-check-circle-fill me-1"></i>
+                                    Pago aprobado
+
+                                <% } else if ("Pendiente".equals(estadoPago)) { %>
+
+                                    <i class="bi bi-hourglass-split me-1"></i>
+                                    Pago pendiente
+
+                                <% } else { %>
+
+                                    <%=esc(estadoPago == null
+                                            ? "Sin registrar"
+                                            : estadoPago)%>
+
+                                <% } %>
+
+                            </span>
+
+                            <p class="text-muted mt-3 mb-0">
+
+                                <% if ("Aprobado".equals(estadoPago)) { %>
+
+                                    Tu pago ha sido confirmado correctamente.
+
+                                <% } else if ("Pendiente".equals(estadoPago)) { %>
+
+                                    Estamos esperando la confirmación de Mercado Pago.
+
+                                <% } else { %>
+
+                                    Consulta el resultado de tu operación.
+
+                                <% } %>
+
+                            </p>
+
+                        </div>
+
+                        <div class="col-md-4 text-md-end">
+
+                            <% if (pedido.getPagoId() != null) { %>
+
+                                <a href="<%=ctx%>/ResultadoPago?pago=<%=esc(pedido.getPagoId())%>"
+                                   class="btn btn-outline-primary">
+
+                                    <i class="bi bi-credit-card me-1"></i>
+                                    Consultar pago
+
+                                </a>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="estado-pago">
+
+                    <span class="badge text-bg-secondary">
+                        Pago manual
+                    </span>
+
+                    <p class="text-muted mt-3 mb-0">
+
+                        El pago será coordinado directamente
+                        con Minimarket Rosita.
+
+                    </p>
+
+                </div>
+
+            <% } %>
 
         </div>
 
@@ -216,7 +414,9 @@
 
                             <tr>
 
-                                <td><%=esc(d.getNombreProducto())%></td>
+                                <td>
+                                    <%=esc(d.getNombreProducto())%>
+                                </td>
 
                                 <td><%=d.getCantidad()%></td>
 

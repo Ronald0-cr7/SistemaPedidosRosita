@@ -288,8 +288,28 @@ else if (ruta.equals("/RegistrarPedidoCarrito")) {
         return;
     }
 
-    String pedidoId;
+   String pedidoId;
 
+String metodoPago =
+        request.getParameter("metodo_pago");
+
+boolean pagoOnline =
+        "MERCADO_PAGO".equals(metodoPago);
+if (pagoOnline) {
+
+    String correoPago =
+            request.getParameter("correo_pago");
+
+    if (correoPago == null
+            || !correoPago.trim().matches(
+                "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+
+        response.sendError(
+                400, "Ingresa un correo electrónico válido");
+
+        return;
+    }
+}
     synchronized (carrito) {
 
         // Verificar que existan productos
@@ -320,8 +340,7 @@ else if (ruta.equals("/RegistrarPedidoCarrito")) {
         pedido.setTipoEntrega(
                 request.getParameter("tipo_entrega"));
 
-        pedido.setMetodoPago(
-                request.getParameter("metodo_pago"));
+        pedido.setMetodoPago(metodoPago);
 
         pedido.setObservaciones(
                 request.getParameter("observaciones"));
@@ -359,9 +378,27 @@ else if (ruta.equals("/RegistrarPedidoCarrito")) {
     }
 
     // Enviar pedido por WhatsApp
-    abrirWhatsAppPedido(request, response, pedidoId);
+   // VERIFICAR MÉTODO DE PAGO
+if (pagoOnline) {
+
+    // Autorizar el inicio del checkout
+    request.setAttribute(
+            "inicioPagoValidado", true);
+
+    // Enviar la solicitud al servlet
+    request.getRequestDispatcher("/SVMercadoPago")
+            .forward(request, response);
 
     return;
+
+} else {
+
+    // Mantener el proceso de WhatsApp
+    abrirWhatsAppPedido(
+            request, response, pedidoId);
+
+    return;
+}
 }     // ACTUALIZAR CANTIDAD
             else if (ruta.equals("/ActualizarCarrito")) {
 

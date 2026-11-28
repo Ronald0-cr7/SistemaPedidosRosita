@@ -255,11 +255,17 @@ public class PedidoDAO {
             throw new SQLException("Falta dirección de entrega");
         }
 
-        if (!java.util.Arrays.asList(
-            "EFECTIVO", "YAPE", "PLIN", "TARJETA", "OTRO"
-        ).contains(p.getMetodoPago())) {
-            throw new SQLException("Método de pago inválido");
-        }
+if (!java.util.Arrays.asList(
+    "EFECTIVO",
+    "YAPE",
+    "PLIN",
+    "TARJETA",
+    "OTRO",
+    "MERCADO_PAGO"
+).contains(p.getMetodoPago())) {
+
+    throw new SQLException("Método de pago inválido");
+}
     }
 
     // Obtener el costo de delivery desde la tienda
@@ -354,71 +360,117 @@ public class PedidoDAO {
             throws SQLException {
         agregarReservado(p, detalles, null);
     }
-    public void agregarReservado(Pedido p, List<PedidoDetalle> detalles, java.util.UUID reservaId)
-            throws SQLException {
+    
+    
+    
+public void agregarReservado(
+        Pedido p,
+        List<PedidoDetalle> detalles,
+        java.util.UUID reservaId) throws SQLException {
 
-        validar(p);
-        Map<Long, Integer> cantidades = agrupar(detalles);
+    validar(p);
 
-  String sql = "INSERT INTO public.pedidos "
-        + "(nombre_contacto, telefono_contacto, "
-        + "tipo_entrega, direccion_entrega, "
-        + "metodo_pago, observaciones, "
-        + "costo_delivery, subtotal, cuenta_cliente_id) "
-        + "VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?::uuid) "
-        + "RETURNING id";
-        try (Connection con = Conexion.conectar()) {
+    Map<Long, Integer> cantidades = agrupar(detalles);
 
-            con.setAutoCommit(false);
+    String sql = """
+        INSERT INTO public.pedidos (
+            nombre_contacto,
+            telefono_contacto,
+            tipo_entrega,
+            direccion_entrega,
+            metodo_pago,
+            observaciones,
+            costo_delivery,
+            subtotal,
+            cuenta_cliente_id
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?::uuid)
+        RETURNING id
+        """;
 
-            try {
-                if (reservaId != null) ReservaDAO.consumir(con, reservaId, cantidades);
-                BigDecimal delivery = obtenerDelivery(con, p);
-                String pedidoId;
+    try (Connection con = Conexion.conectar()) {
 
-                // Registrar cabecera
-                try (PreparedStatement ps =
-                        con.prepareStatement(sql)) {
+        con.setAutoCommit(false);
 
-                    ps.setString(1, p.getNombreContacto());
-                    ps.setString(2, p.getTelefonoContacto());
-                    ps.setString(3, p.getTipoEntrega());
-                    ps.setString(4, p.getDireccionEntrega());
-                    ps.setString(5, p.getMetodoPago());
-                    ps.setString(6, p.getObservaciones());
-                    ps.setBigDecimal(7, delivery);
-                    ps.setString(8, p.getCuentaClienteId());
+        try {
 
-                    try (ResultSet rs = ps.executeQuery()) {
-                        rs.next();
-                        pedidoId = rs.getString("id");
-                    }
-                }
-
-                // Registrar productos y calcular subtotal
-                BigDecimal subtotal =
-                    guardarDetalles(con, pedidoId, cantidades);
-
-                // Actualizar importe del pedido
-                try (PreparedStatement ps = con.prepareStatement(
-                    "UPDATE public.pedidos SET subtotal = ? "
-                    + "WHERE id = ?::uuid")) {
-
-                    ps.setBigDecimal(1, subtotal);
-                    ps.setString(2, pedidoId);
-                    ps.executeUpdate();
-                }
-
-                con.commit();
-                p.setId(pedidoId);
-
-            } catch (Exception e) {
-                con.rollback();
-                throw new SQLException(
-                    "No se pudo registrar el pedido", e);
+            // CONSUMIR RESERVA DE STOCK
+            if (reservaId != null) {
+                ReservaDAO.consumir(
+                        con, reservaId, cantidades);
             }
+
+            BigDecimal delivery = obtenerDelivery(con, p);
+
+            String pedidoId;
+
+            // REGISTRAR PEDIDO
+            try (PreparedStatement ps =
+                    con.prepareStatement(sql)) {
+
+                ps.setString(1, p.getNombreContacto());
+                ps.setString(2, p.getTelefonoContacto());
+                ps.setString(3, p.getTipoEntrega());
+                ps.setString(4, p.getDireccionEntrega());
+                ps.setString(5, p.getMetodoPago());
+                ps.setString(6, p.getObservaciones());
+                ps.setBigDecimal(7, delivery);
+                ps.setString(8, p.getCuentaClienteId());
+
+                try (ResultSet rs = ps.executeQuery()) {
+
+                    if (!rs.next()) {
+                        throw new SQLException(
+                                "No se pudo crear el pedido");
+                    }
+
+                    pedidoId = rs.getString("id");
+                }
+            }
+
+            // REGISTRAR DETALLES
+            BigDecimal subtotal =
+                    guardarDetalles(
+                            con, pedidoId, cantidades);
+
+            // ACTUALIZAR SUBTOTAL
+            try (PreparedStatement ps =
+                    con.prepareStatement(
+                            """
+                            UPDATE public.pedidos
+                            SET subtotal = ?
+                            WHERE id = ?::uuid
+                            """)) {
+
+                ps.setBigDecimal(1, subtotal);
+                ps.setString(2, pedidoId);
+
+                ps.executeUpdate();
+            }
+
+            // REGISTRAR PAGO PENDIENTE
+            if ("MERCADO_PAGO".equals(p.getMetodoPago())) {
+
+                PagoDAO pagoDAO = new PagoDAO();
+
+                pagoDAO.registrarPendiente(
+                        con, pedidoId);
+            }
+
+            // CONFIRMAR TRANSACCIÓN
+            con.commit();
+
+            p.setId(pedidoId);
+
+        } catch (Exception e) {
+
+            con.rollback();
+
+            throw new SQLException(
+                    "No se pudo registrar el pedido", e);
         }
     }
+}
 
     // UPDATE: Actualizar pedido y sus productos
     public void actualizar(Pedido p, List<PedidoDetalle> detalles)
@@ -616,9 +668,30 @@ public List<Pedido> listarPorCliente(String clienteId)
 
     List<Pedido> lista = new ArrayList<>();
 
-    String sql = "SELECT * FROM public.pedidos "
-            + "WHERE cuenta_cliente_id = ?::uuid "
-            + "ORDER BY creado_en DESC";
+    String sql = """
+        SELECT
+            p.*,
+            pg.id AS pago_id,
+            pg.estado AS estado_pago
+        FROM public.pedidos p
+
+        LEFT JOIN LATERAL (
+            SELECT id, estado
+            FROM public.pagos
+            WHERE pedido_id = p.id
+            ORDER BY
+                CASE
+                    WHEN estado = 'Aprobado' THEN 0
+                    WHEN estado = 'Pendiente' THEN 1
+                    ELSE 2
+                END,
+                creado_en DESC
+            LIMIT 1
+        ) pg ON true
+
+        WHERE p.cuenta_cliente_id = ?::uuid
+        ORDER BY p.creado_en DESC
+        """;
 
     try (Connection con = Conexion.conectar();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -629,7 +702,15 @@ public List<Pedido> listarPorCliente(String clienteId)
 
             while (rs.next()) {
 
-                lista.add(convertirPedido(rs));
+                Pedido pedido = convertirPedido(rs);
+
+                pedido.setPagoId(
+                        rs.getString("pago_id"));
+
+                pedido.setEstadoPago(
+                        rs.getString("estado_pago"));
+
+                lista.add(pedido);
             }
         }
     }
@@ -638,11 +719,34 @@ public List<Pedido> listarPorCliente(String clienteId)
 }
 
 //buscar un pedido que pertenezca al cliente conectado:
-public Pedido buscarPorCliente(String pedidoId, String clienteId)
+public Pedido buscarPorCliente(
+        String pedidoId, String clienteId)
         throws SQLException {
 
-    String sql = "SELECT * FROM public.pedidos "
-            + "WHERE id = ?::uuid AND cuenta_cliente_id = ?::uuid";
+    String sql = """
+        SELECT
+            p.*,
+            pg.id AS pago_id,
+            pg.estado AS estado_pago
+        FROM public.pedidos p
+
+        LEFT JOIN LATERAL (
+            SELECT id, estado
+            FROM public.pagos
+            WHERE pedido_id = p.id
+            ORDER BY
+                CASE
+                    WHEN estado = 'Aprobado' THEN 0
+                    WHEN estado = 'Pendiente' THEN 1
+                    ELSE 2
+                END,
+                creado_en DESC
+            LIMIT 1
+        ) pg ON true
+
+        WHERE p.id = ?::uuid
+        AND p.cuenta_cliente_id = ?::uuid
+        """;
 
     try (Connection con = Conexion.conectar();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -653,7 +757,16 @@ public Pedido buscarPorCliente(String pedidoId, String clienteId)
         try (ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
-                return convertirPedido(rs);
+
+                Pedido pedido = convertirPedido(rs);
+
+                pedido.setPagoId(
+                        rs.getString("pago_id"));
+
+                pedido.setEstadoPago(
+                        rs.getString("estado_pago"));
+
+                return pedido;
             }
         }
     }

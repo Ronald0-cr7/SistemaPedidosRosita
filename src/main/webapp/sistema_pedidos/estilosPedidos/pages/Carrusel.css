@@ -1,0 +1,58 @@
+#heroCarousel {
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+        margin: 12px 20px;
+    }
+
+    #heroCarousel .carousel-item {
+        position: relative;
+    }
+
+    #heroCarousel .banner-btn {
+        position: absolute !important;
+        bottom: 12%;
+        left: 10%;
+        z-index: 20;
+        display: inline-block;
+        padding: 12px 32px;
+        background: #ffffff;
+        color: #152238 !important;
+        border-radius: 25px;
+        font-size: 18px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 4px 15px #0004;
+    }
+
+    #heroCarousel .banner-btn:hover {
+        background: #0d9488;
+        color: white !important;
+    }
+    /* Flechas del carrusel */
+#heroCarousel .carousel-control-prev,
+#heroCarousel .carousel-control-next {
+    width: 6%;
+    opacity: 1 !important;
+    z-index: 15;
+    display: flex !important;
+}
+
+#heroCarousel .carousel-control-prev-icon,
+#heroCarousel .carousel-control-next-icon {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(0, 0, 0, 0.65);
+    background-size: 45%;
+    border: 2px solid white;
+    border-radius: 50%;
+    filter: none !important;
+    box-shadow: 0 4px 12px #0005;
+    transition: 0.3s ease;
+}
+
+#heroCarousel .carousel-control-prev:hover span,
+#heroCarousel .carousel-control-next:hover span {
+    background-color: #0d9488;
+    transform: scale(1.1);
+}

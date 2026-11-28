@@ -241,6 +241,7 @@
                                 <th>DELIVERY</th>
                                 <th>TOTAL</th>
                                 <th>ESTADO</th>
+                                <th>ESTADO PAGO</th>
                                 <th>ACCION</th>
                             </tr>
 
@@ -319,15 +320,72 @@
                                     <% } %>
 
                                 </td>
+                                <td>
+
+    <% if ("MERCADO_PAGO".equals(p.getMetodoPago())) { %>
+
+        <% if ("Aprobado".equals(p.getEstadoPago())) { %>
+
+            <span class="badge text-bg-success">
+                <i class="bi bi-check-circle"></i>
+                Pagado
+            </span>
+
+        <% } else if ("Pendiente".equals(p.getEstadoPago())) { %>
+
+            <span class="badge text-bg-warning">
+                Pendiente
+            </span>
+
+        <% } else if (p.getEstadoPago() == null) { %>
+
+            <span class="badge text-bg-secondary">
+                Sin registrar
+            </span>
+
+        <% } else { %>
+
+            <span class="badge text-bg-danger">
+                <%=esc(p.getEstadoPago())%>
+            </span>
+
+        <% } %>
+
+    <% } else { %>
+
+        <span class="badge text-bg-secondary">
+            Pago manual
+        </span>
+
+    <% } %>
+
+</td>
 <td>
 
-    <a href="<%=ctx%>/DetallePedidoCliente?id=<%=esc(p.getId())%>"
-       class="btn btn-outline-primary btn-sm">
+    <div class="d-flex flex-column gap-2">
 
-        <i class="bi bi-eye me-1"></i>
-        Ver detalle
+        <a href="<%=ctx%>/DetallePedidoCliente?id=<%=esc(p.getId())%>"
+           class="btn btn-outline-primary btn-sm">
 
-    </a>
+            <i class="bi bi-eye me-1"></i>
+            Ver detalle
+
+        </a>
+
+        <% if ("MERCADO_PAGO".equals(p.getMetodoPago())
+                && p.getPagoId() != null) { %>
+
+            <a href="<%=ctx%>/ResultadoPago?pago=<%=esc(p.getPagoId())%>"
+               class="btn btn-outline-success btn-sm">
+
+                <i class="bi bi-credit-card me-1"></i>
+                Consultar pago
+
+            </a>
+
+        <% } %>
+
+    </div>
 
 </td>
                             </tr>
