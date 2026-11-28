@@ -29,7 +29,7 @@ private String pagoId;
     public Pedido() {
     }
 
-    public Pedido(String id, String numero, String nombreContacto, String telefonoContacto, String tipoEntrega, String direccionEntrega, String metodoPago, String estado, String observaciones, String creadoEn, double costoDelibery, double subtotal, double totalEstimado, String cuentaClienteId) {
+    public Pedido(String id, String numero, String nombreContacto, String telefonoContacto, String tipoEntrega, String direccionEntrega, String metodoPago, String estado, String observaciones, String creadoEn, double costoDelibery, double subtotal, double totalEstimado, String cuentaClienteId, String estadoPago, String pagoId) {
         this.id = id;
         this.numero = numero;
         this.nombreContacto = nombreContacto;
@@ -44,7 +44,27 @@ private String pagoId;
         this.subtotal = subtotal;
         this.totalEstimado = totalEstimado;
         this.cuentaClienteId = cuentaClienteId;
+        this.estadoPago = estadoPago;
+        this.pagoId = pagoId;
     }
+
+    public String getEstadoPago() {
+        return estadoPago;
+    }
+
+    public void setEstadoPago(String estadoPago) {
+        this.estadoPago = estadoPago;
+    }
+
+    public String getPagoId() {
+        return pagoId;
+    }
+
+    public void setPagoId(String pagoId) {
+        this.pagoId = pagoId;
+    }
+
+ 
 
     public String getCuentaClienteId() {
         return cuentaClienteId;
